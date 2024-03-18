@@ -71,27 +71,26 @@ app.post("/register",async function(request,response){
         const salt = await bcrypt.genSalt(10);
         const hashedPassword=await bcrypt.hash(password,salt);
         const registerMethod=await client.db("CRUD").collection("users").insertOne({username:username,email:email,password:hashedPassword});
-        console.log(hashedPassword);
         // response.status(201).send(registerMethod);
     }
 })
 
 app.post("/login",async function(request,response){
-    const {email,password}=request.body;
+    const {email, password}=request.body;
     const userFind = await client.db("CRUD").collection("users").findOne({email:email});
     if(userFind){
         const mongoDBpassword = userFind.password;
         const passwordCheck = await bcrypt.compare(password,mongoDBpassword);
         if(passwordCheck){
-            const token = jwt.sign({id:userFind._id},"student"); //jwt token 
+            const token = jwt.sign({id:userFind._id},"student",); //jwt token 
             response.status(200).send({token:token});
         }
         else{
-            response.status(400).send("Invalid password")
+            response.status(400).send({message:"Invalid password"})
         }
     }
     else{
-        response.status(400).send("Invalid email");
+        response.status(400).send({message:"Invalid email"});
     }
 })
 
