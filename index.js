@@ -10,7 +10,10 @@ const client= new MongoClient(url);
 await client.connect();
 console.log("mongodb connected");
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin:"*"
+}));
+
 
 const auth =(request,response,next)=>{
     try {
