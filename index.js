@@ -1,13 +1,13 @@
 import express from "express";
 import { MongoClient, ObjectId } from 'mongodb';
-
+import cors from "cors";
 const app=express();
 const url="mongodb+srv://sanjai:sanjai123@movies.vcowzfe.mongodb.net/?retryWrites=true&w=majority&appName=movies"
 const client= new MongoClient(url);
 await client.connect();
 console.log("mongodb connected");
 app.use(express.json());
-
+app.use(cors());
 app.get("/",function(request,response){
     response.send("Hello World")
 })
