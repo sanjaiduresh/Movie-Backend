@@ -14,7 +14,6 @@ app.use(cors({
     origin:"*"
 }));    
 
-
 const auth =(request,response,next)=>{
     try {
         const token = request.header("backend-token"); // keyname
