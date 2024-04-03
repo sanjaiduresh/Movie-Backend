@@ -1,5 +1,5 @@
 import express from "express";
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import cors from "cors";
 import bcrypt from "bcrypt";
 import  jwt  from "jsonwebtoken";
@@ -12,7 +12,7 @@ console.log("mongodb connected");
 app.use(express.json());
 app.use(cors({
     origin:"*"
-}));
+}));    
 
 
 const auth =(request,response,next)=>{
@@ -25,45 +25,6 @@ const auth =(request,response,next)=>{
     }
 }
 
-app.get("/",function(request,response){
-    response.status(200).send("Hello World")
-})
-
-app.get("/get",auth,async function(request,response){
-    const getMethod=await client.db("CRUD").collection("data").find({}).toArray();
-    response.status(200).send(getMethod);
-})
-
-app.post("/post",async function(request,response){
-    const getPostman =request.body;
-    const sendMethod = await client.db("CRUD").collection("data").insertOne(getPostman);
-    response.status(201).send(sendMethod);
-});
-app.post("/postmany",async function(request,response){
-    const getMany =request.body;
-    const sendMethod =await client.db("CRUD").collection("data").insertMany(getMany);
-    response.status(201).send(sendMethod);
-})
-
-app.get("/getone/:id",async function(request,response){
-    const {id} = request.params;
-    const getMethod = await client.db("CRUD").collection("data").findOne({_id:new ObjectId(id)});
-    response.status(200).send(getMethod);
-})
-app.put("/updateone/:id",async function(request,response){
-    const {id}=request.params;
-    const getPostman =request.body;
-    const updateMethod=await client.db("CRUD").collection("data").updateOne({_id:new ObjectId(id)},{$set:getPostman});
-    response.status(201).send(updateMethod);
-});
-
-app.delete("/delete/:id",async function(request,response){
-    const {id}=request.params;
-    const deleteMethod=await client.db("CRUD").collection("data").deleteOne({_id:new ObjectId(id)});
-    response.status(200).send(deleteMethod);
-})
-
-
 app.post("/register",async function(request,response){
     const {username,email,password}=request.body;
     const userFind= await client.db("CRUD").collection("users").findOne({email:email});
@@ -74,7 +35,6 @@ app.post("/register",async function(request,response){
         const salt = await bcrypt.genSalt(10);
         const hashedPassword=await bcrypt.hash(password,salt);
         const registerMethod=await client.db("CRUD").collection("users").insertOne({username:username,email:email,password:hashedPassword});
-        // response.status(201).send(registerMethod);
     }
 })
 
